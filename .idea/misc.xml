@@ -4,10 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/drawable/buttonshape.xml" value="0.2415" />
+        <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/drawable/circlebtn.xml" value="0.2425" />
         <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/layout/activity_admin.xml" value="0.33" />
         <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/layout/activity_ask_mobile_andprofile.xml" value="0.36666666666666664" />
         <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/layout/activity_doctor.xml" value="0.36666666666666664" />
         <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/layout/activity_doctors.xml" value="0.36666666666666664" />
+        <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/layout/activity_doctors_list.xml" value="0.36666666666666664" />
         <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/layout/activity_forget_password.xml" value="0.35688405797101447" />
         <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/layout/activity_login.xml" value="0.35688405797101447" />
         <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/layout/activity_main.xml" value="0.35260416666666666" />
@@ -15,6 +17,7 @@
         <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/layout/activity_user_home.xml" value="0.33" />
         <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/layout/activity_user_option.xml" value="0.36666666666666664" />
         <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/layout/activity_user_profile.xml" value="0.36666666666666664" />
+        <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/layout/doctorview.xml" value="0.36666666666666664" />
         <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/menu/adminmenu.xml" value="0.36666666666666664" />
         <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/menu/top_app_bar.xml" value="0.24444444444444444" />
         <entry key="..\:/androidP/Hospitalmanagment/app/src/main/res/xml/buttonshape.xml" value="0.36666666666666664" />
