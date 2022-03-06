@@ -7,21 +7,31 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hospital.hospitalmanagment.Adapter.DoctorsAdapter;
@@ -45,6 +55,7 @@ public class DoctorsListActivity extends AppCompatActivity {
     private DatabaseReference doctorsdbReference;
     public Context doctorslistcontex;
     private CoordinatorLayout coordinatorLayout;
+    private ProgressDialog progd;
 
     @Override
     protected void onStart() {
@@ -68,19 +79,35 @@ public class DoctorsListActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         doctorsdbReference = FirebaseDatabase.getInstance().getReference("Doctors");
         doctorslistcontex = this;
+        progd = new ProgressDialog(this);
+        progd.setMessage("Loading...");
+        progd.show();
 
         FirebaseRecyclerOptions<DoctorModel> firebaseRecyclerOptions = new FirebaseRecyclerOptions.Builder<DoctorModel>()
                 .setQuery(doctorsdbReference,DoctorModel.class).build();
+
         doctorsAdapter = new DoctorsAdapter(firebaseRecyclerOptions,doctorslistcontex);
         doclistrecycleview.setAdapter(doctorsAdapter);
+
+        doctorsdbReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    progd.dismiss();
+                }
+            }
+        });
 
         doctorsAdapter.setOnDoctorviewItemClickListner(new DoctorsAdapter.onviewclickactionlistners() {
             @Override
             public void onbookappointclicklistner(String docname,String docspec,String uidofdoctor, int position) {
-                Snackbar.make(coordinatorLayout, "uid is "+uidofdoctor+" and position is "+position, Snackbar.LENGTH_SHORT).show();
+//                Snackbar.make(coordinatorLayout, "uid is "+uidofdoctor+" and position is "+position, Snackbar.LENGTH_SHORT).show();
                 LayoutInflater li = LayoutInflater.from(doctorslistcontex);
                 View formalertview = li.inflate(R.layout.appointforminalertdialog,null);
                 AlertDialog.Builder formalert = new AlertDialog.Builder(doctorslistcontex);
+
+                final StringBuilder dateTimestamp = new StringBuilder();
+                final StringBuilder requestedTime = new StringBuilder();
 
 //                appointdrname appointdrspec
                 final TextView tvdrname = formalertview.findViewById(R.id.appointdrname);
@@ -94,9 +121,7 @@ public class DoctorsListActivity extends AppCompatActivity {
                 LocalDate date = LocalDate.now();
                 Calendar cl = Calendar.getInstance();
                 cl.set(date.getYear(),date.getMonthValue()-1,date.getDayOfMonth()+6);
-
                 appointcaledar.setMaxDate(cl.getTimeInMillis());
-                Snackbar.make(coordinatorLayout," year "+date.getYear()+" month : "+date.getMonthValue()+" date :"+(date.getDayOfMonth()+7),Snackbar.LENGTH_LONG).show();
 
                 appointcaledar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                     @Override
@@ -104,41 +129,64 @@ public class DoctorsListActivity extends AppCompatActivity {
 
                         Calendar calendar1 = Calendar.getInstance();
                         calendar1.set(year,(month),dayOfMonth);
+                        dateTimestamp.delete(0,dateTimestamp.length());
+                        dateTimestamp.append(calendar1.getTimeInMillis());
+//                        Snackbar.make(coordinatorLayout,"date time stamp "+dateTimestamp.toString(),Snackbar.LENGTH_SHORT).show();
 
+                        /*
                         LocalDate date1 = Instant.ofEpochMilli(calendar1.getTimeInMillis()).atZone(ZoneId.systemDefault()).toLocalDate();
                         Snackbar.make(coordinatorLayout,"from local date obj "+date1.getYear()+" month "+date1.getMonthValue()+" day "+date1.getDayOfMonth(),Snackbar.LENGTH_SHORT).show();
-
+*/
                     }
                 });
 
                 final Spinner spinneroftime = formalertview.findViewById(R.id.timingspinner);
-                List<String> Timings = Arrays.asList("7-9 AM", "9-11 AM","11-1 PM","2-4 PM","4-6 PM","6-8 PM","8-10 PM");
-                ArrayAdapter<String> adapteroftiminglist = new ArrayAdapter<>(doctorslistcontex,R.layout.spinnertextview,Timings);
+                List<String> Timings = Arrays.asList("Select the time slot","7-9 AM", "9-11 AM","11-1 PM","2-4 PM","4-6 PM","6-8 PM","8-10 PM");
+                ArrayAdapter<String> adapteroftiminglist = new ArrayAdapter<String>(doctorslistcontex,R.layout.spinnertextview,Timings){
+                    @Override
+                    public boolean isEnabled(int position){
+                        //idher dekna doubt
+                        // because of this if block Disable the first item from Spinner
+                        // First item will be use for hint
+                        return position != 0;
+                    }
+                    @Override
+                    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                        View view = super.getDropDownView(position, convertView, parent);
+                        TextView tv = (TextView) view;
+                        if(position == 0){
+                            // Set the hint text color gray
+                            tv.setTextColor(Color.GRAY);
+                        }
+                        return view;
+                    }
+                };
+
                 adapteroftiminglist.setDropDownViewResource(R.layout.spinnertextview);
                 spinneroftime.setAdapter(adapteroftiminglist);
-
 
                 spinneroftime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                        Snackbar.make(coordinatorLayout,""+parent.getItemAtPosition(position).toString(),Snackbar.LENGTH_SHORT).show();
+                        if(position > 0) {
+                            requestedTime.delete(0, requestedTime.length());
+                            requestedTime.append(parent.getItemAtPosition(position).toString());
+//                        Snackbar.make(coordinatorLayout," requested time "+requestedTime.toString(),Snackbar.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
 
                     }
+
                 });
 
                 formalert.setView(formalertview);
 
                 formalert
                         .setCancelable(false)
-                        .setPositiveButton("Request Appointment", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
+                        .setPositiveButton("Request Appointment", null)
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -146,12 +194,58 @@ public class DoctorsListActivity extends AppCompatActivity {
                             }
                         });
 
+
                 AlertDialog alertDialog = formalert.create();
+
+                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+
+                        Button bookappointmentbtn = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                      bookappointmentbtn.setOnClickListener(new View.OnClickListener() {
+                          @Override
+                          public void onClick(View v) {
+                              if(!dateTimestamp.toString().equals("") && !requestedTime.toString().equals(""))
+                              {
+                                  progd.setTitle("Booking Appointment...");
+                                  progd.show();
+                                  sayhi(dateTimestamp.toString(),requestedTime.toString(),uidofdoctor,alertDialog);
+                              }else{
+                                  Snackbar.make(coordinatorLayout,"Please Select Date And Time of Appointment",Snackbar.LENGTH_SHORT).show();
+                              }
+                          }
+                      });
+
+                    }
+                });
+
                 alertDialog.show();
+
 
             }
         });
 
     }//
+
+    private void sayhi(String timstamp,String requestTime,String uidofdoc,AlertDialog alertDialog) {
+
+        Snackbar.make(coordinatorLayout,"outside request btn click "+"date"+timstamp+" time"+requestTime,Snackbar.LENGTH_SHORT).show();
+        long timeOfBookingInTimestamp = Calendar.getInstance().getTimeInMillis();
+        DatabaseReference dbrefofAppointment = FirebaseDatabase.getInstance().getReference("Appointment")
+                .child(firebaseAuth.getCurrentUser().getUid()).child(uidofdoc).child(Long.toString(timeOfBookingInTimestamp));
+        dbrefofAppointment.child("Status").setValue("pending");
+        dbrefofAppointment.child("DateTimestamp").setValue(timstamp);
+        dbrefofAppointment.child("timeSlot").setValue(requestTime);
+        dbrefofAppointment.child("Patienuid").setValue(firebaseAuth.getCurrentUser().getUid());
+         new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progd.dismiss();
+                alertDialog.dismiss();
+                Snackbar.make(coordinatorLayout,"Your Appointment Request booked.",Snackbar.LENGTH_SHORT).show();
+            }
+        },2000);
+
+    }
 
 }//
