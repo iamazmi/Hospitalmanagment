@@ -61,7 +61,7 @@ public class DoctorsAdapter extends FirebaseRecyclerAdapter<DoctorModel,DoctorsA
             super(itemView);
             this.docpic = itemView.findViewById(R.id.docpic);
             this.docname = itemView.findViewById(R.id.docname);
-            this.docspec = itemView.findViewById(R.id.docspec);
+            this.docspec = itemView.findViewById(R.id.docspeci);
             this.docuid = itemView.findViewById(R.id.docuid);
             this.tryappointbtn = itemView.findViewById(R.id.tryappointbtn);
 

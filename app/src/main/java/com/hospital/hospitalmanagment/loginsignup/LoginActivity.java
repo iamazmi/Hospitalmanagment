@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.hospital.hospitalmanagment.AdminActivity;
 import com.hospital.hospitalmanagment.R;
 import com.hospital.hospitalmanagment.doctor.DoctorActivity;
+import com.hospital.hospitalmanagment.doctor.DoctorHomeActivity;
 import com.hospital.hospitalmanagment.user.AskMobileAndprofileActivity;
 import com.hospital.hospitalmanagment.user.UserHomeActivity;
 
@@ -141,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
                                                         .putExtra("adminEmail",userEmail).putExtra("adminPass",userPass));
                                                 finish();
                                             }else if(task.getResult().child("DoctorName").exists()){
-                                                startActivity(new Intent(LoginActivity.this, DoctorActivity.class));
+                                                startActivity(new Intent(LoginActivity.this, DoctorHomeActivity.class));
                                                 finish();
                                             }else {
                                                 firebaseAuth.signOut();

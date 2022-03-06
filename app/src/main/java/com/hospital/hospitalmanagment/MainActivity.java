@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hospital.hospitalmanagment.doctor.DoctorActivity;
+import com.hospital.hospitalmanagment.doctor.DoctorHomeActivity;
 import com.hospital.hospitalmanagment.loginsignup.LoginActivity;
 import com.hospital.hospitalmanagment.loginsignup.UserOptionActivity;
 import com.hospital.hospitalmanagment.user.AskMobileAndprofileActivity;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                             finish();
                         }else if(task.getResult().child("Special").exists()){
                             Snackbar.make(coordinatorLayout, "user  found in doctor login and doctor ", Snackbar.LENGTH_SHORT).show();
-                            startActivity(new Intent(MainActivity.this, DoctorActivity.class));
+                            startActivity(new Intent(MainActivity.this, DoctorHomeActivity.class));
                             finish();
                         }else{
                             Snackbar.make(coordinatorLayout, "user not found in doctor login", Snackbar.LENGTH_SHORT).show();

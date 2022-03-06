@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
+            android:name=".doctor.AppointmentsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".doctor.DoctorHomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".user.DoctorsListActivity"
             android:exported="false" />
         <activity

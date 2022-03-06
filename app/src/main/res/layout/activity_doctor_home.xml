@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".doctor.DoctorHomeActivity">
+
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/purple_500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical" />
+
+
+
+    <androidx.cardview.widget.CardView
+        app:cardElevation="0dp"
+        android:id="@+id/cardView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="-70dp"
+        android:layout_marginRight="15dp"
+        app:cardBackgroundColor="#DFDFDF"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView2"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="16dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="30dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:background="#458"
+                    app:cardCornerRadius="30dp">
+
+                    <ImageView
+                        android:id="@+id/docimg"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/patientpic" />
+
+                </androidx.cardview.widget.CardView>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+
+            <LinearLayout
+                android:id="@+id/linearLayout5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical"
+                android:padding="5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/cardView2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/cardView2"
+                app:layout_constraintTop_toTopOf="@+id/cardView2"
+                app:layout_constraintVertical_bias="0.133">
+
+                <TextView
+                    android:id="@+id/docname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DoctghggforName"
+                    android:textColor="@color/black"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/docspeci"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DoctorSpec"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        app:layout_constraintTop_toBottomOf="@+id/docout"
+        tools:layout_editor_absoluteX="0dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardpending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="50"
+            app:cardBackgroundColor="#FFA000"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="50dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="20dp"
+                android:text="Pending Appointments"
+                android:textAlignment="center"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardapproved"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="50"
+            app:cardBackgroundColor="@color/alerttextcolor"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="50dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="20dp"
+                android:text="Approved Appointments"
+                android:textAlignment="center"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="  Approved Appointments"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout4"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout4"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycledrappoint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/docout"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="-30dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="50dp"
+        app:layout_constraintEnd_toEndOf="@+id/cardView3"
+        app:layout_constraintTop_toBottomOf="@+id/cardView3">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            app:cardBackgroundColor="#D81B60"
+            app:cardCornerRadius="30dp">
+
+            <ImageView
+                android:id="@+id/logimg"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="center"
+
+                android:src="@drawable/ic_baseline_exit_to_app_24" />
+
+        </androidx.cardview.widget.CardView>
+
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
