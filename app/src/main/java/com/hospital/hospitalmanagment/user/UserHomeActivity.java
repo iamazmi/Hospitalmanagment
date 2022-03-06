@@ -43,16 +43,15 @@ public class UserHomeActivity extends AppCompatActivity {
     private  MaterialToolbar materialToolbar;
     Context context;
     private Menu menu;
-     private CardView bookappoint,historyappointmentv,Hospitalistv,faqv;
+    private CardView bookappoint,historyappointmentv,Hospitalistv,faqv;
 
-     private FirebaseAuth firebaseAuth;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
         return super.onCreateOptionsMenu(menu);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +65,13 @@ public class UserHomeActivity extends AppCompatActivity {
         Hospitalistv = findViewById(R.id.Hospitalist);
         faqv = findViewById(R.id.faqbtn);
 
-
         firebaseAuth = FirebaseAuth.getInstance();
-
 
         bookappoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bookappoint.startAnimation(AnimationUtils.loadAnimation(UserHomeActivity.this,R.anim.clickeffect));
+                startActivity(new Intent(UserHomeActivity.this,DoctorsListActivity.class));
             }
         });
         historyappointmentv.setOnClickListener(new View.OnClickListener() {
@@ -97,8 +95,6 @@ public class UserHomeActivity extends AppCompatActivity {
 
             }
         });
-
-
 
 
         materialToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {

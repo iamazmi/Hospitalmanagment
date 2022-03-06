@@ -223,8 +223,6 @@ public class AdminActivity extends AppCompatActivity {
         final String userName = txtinpeditextname.getText().toString().trim();
         final String userSpec = txtinpeditextdocc.getText().toString().trim();
 
-        final FirebaseUser admin = firebaseAuth.getCurrentUser();
-
         firebaseAuth.createUserWithEmailAndPassword(userEmail,userPass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -234,6 +232,7 @@ public class AdminActivity extends AppCompatActivity {
                     DatabaseReference dbdcotorref = FirebaseDatabase.getInstance().getReference("Doctors").child(task.getResult().getUser().getUid());
                     dbdcotorref.child("DoctorName").setValue(userName);
                     dbdcotorref.child("Special").setValue(userSpec);
+                    dbdcotorref.child("uid").setValue(firebaseAuth.getCurrentUser().getUid());
 
                     if (imgpathuri != null) {
                         fireStorage = FirebaseStorage.getInstance();
