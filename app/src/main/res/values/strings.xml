@@ -11,4 +11,7 @@
     <string name="login_failed">"Login failed"</string>
     <string name="SpinnerTimes">time of appointment</string>
     <string name="times_of_appointments">Times of appointments</string>
+    <string name="pending">"Pending"</string>
+    <string name="approved">"Approved"</string>
+    <string name="canceled">"Canceled"</string>
 </resources>

@@ -92,7 +92,7 @@ public class AskMobileAndprofileActivity extends AppCompatActivity {
 //                Toast.makeText(SignupActivity.this," "+txtinpeditextname.getText(),Toast.LENGTH_LONG).show();
 
                 if(isAllDataMeetRequirment()){
-                    progressDialog.setTitle("Updating Details...");
+                    progressDialog.setMessage("Updating Details...");
                     progressDialog.show();
 //                    Toast.makeText(AskMobileAndprofileActivity.this,"all is good",Toast.LENGTH_LONG).show();
                     uploadPicUpdateNoPatient();

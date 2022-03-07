@@ -98,7 +98,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(isAllDataMeetRequirment()){
-                    progressDialog.setTitle("Creating Account...");
+                    progressDialog.setMessage("Creating Account...");
                     progressDialog.show();
                     Toast.makeText(SignupActivity.this,"all is good",Toast.LENGTH_SHORT).show();
                     firebaseAuth = FirebaseAuth.getInstance();

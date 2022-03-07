@@ -38,7 +38,7 @@ public class DoctorHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_home);
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Loading...");
+        progressDialog.setMessage("Loading...");
         progressDialog.show();
         this.tvdocname = findViewById(R.id.docname);
         this.tvdocspec = findViewById(R.id.docspeci);
@@ -64,14 +64,16 @@ public class DoctorHomeActivity extends AppCompatActivity {
         pendingCardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DoctorHomeActivity.this,AppointmentsActivity.class).putExtra("Appointmentfrom","Pendings"));
+                String from = getResources().getString(R.string.pending);
+                startActivity(new Intent(DoctorHomeActivity.this,AppointmentsActivity.class).putExtra("Appointmentfrom",from));
             }
         });
 
         approvedCardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DoctorHomeActivity.this,AppointmentsActivity.class).putExtra("Appointmentfrom","Approved"));
+                String from = getResources().getString(R.string.approved);
+                startActivity(new Intent(DoctorHomeActivity.this,AppointmentsActivity.class).putExtra("Appointmentfrom",from));
             }
         });
 

@@ -79,7 +79,7 @@ public class UserProfileActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        progressDialog.setTitle("Loading...");
+        progressDialog.setMessage("Loading...");
         progressDialog.show();
         InitializeAllFields();
 
@@ -109,7 +109,7 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(Isnamecorrect()){
-                    progressDialog.setTitle("Updating detail...");
+                    progressDialog.setMessage("Updating detail...");
                     progressDialog.show();
                     updateUserData();
                 }

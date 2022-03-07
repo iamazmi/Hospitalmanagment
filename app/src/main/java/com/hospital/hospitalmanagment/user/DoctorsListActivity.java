@@ -207,7 +207,7 @@ public class DoctorsListActivity extends AppCompatActivity {
                           public void onClick(View v) {
                               if(!dateTimestamp.toString().equals("") && !requestedTime.toString().equals(""))
                               {
-                                  progd.setTitle("Booking Appointment...");
+                                  progd.setMessage("Booking Appointment...");
                                   progd.show();
                                   sayhi(dateTimestamp.toString(),requestedTime.toString(),uidofdoctor,alertDialog);
                               }else{
@@ -232,9 +232,9 @@ public class DoctorsListActivity extends AppCompatActivity {
         Snackbar.make(coordinatorLayout,"outside request btn click "+"date"+timstamp+" time"+requestTime,Snackbar.LENGTH_SHORT).show();
         long timeOfBookingInTimestamp = Calendar.getInstance().getTimeInMillis();
         DatabaseReference dbrefofAppointment = FirebaseDatabase.getInstance().getReference("Patiens")
-                .child(firebaseAuth.getCurrentUser().getUid()).child("Appointment").child(uidofdoc).child(Long.toString(timeOfBookingInTimestamp));;
-//                .child(uidofdoc).child(Long.toString(timeOfBookingInTimestamp));
-        dbrefofAppointment.child("Status").setValue("pending");
+                .child(firebaseAuth.getCurrentUser().getUid()).child("Appointment").child(uidofdoc).child(timstamp);
+
+        dbrefofAppointment.child("Status").setValue((getResources().getString(R.string.pending)));
         dbrefofAppointment.child("DateTimestamp").setValue(timstamp);
         dbrefofAppointment.child("timeSlot").setValue(requestTime);
 //        dbrefofAppointment.child("Patienuid").setValue(firebaseAuth.getCurrentUser().getUid());

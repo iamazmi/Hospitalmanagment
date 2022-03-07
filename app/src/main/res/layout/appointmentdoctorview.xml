@@ -72,42 +72,76 @@
                     app:layout_constraintTop_toTopOf="@+id/appointviewimg" />
 
                 <TextView
-                    android:id="@+id/appviewpatienemail"
+                    android:id="@+id/appviewpatienphone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="4dp"
-                    android:text="Patienemail"
+                    android:text="0987654321"
+                    android:textStyle="normal"
                     app:layout_constraintStart_toEndOf="@+id/appointviewimg"
                     app:layout_constraintTop_toBottomOf="@+id/appviewpatiename" />
 
+                <TextView
+                    android:id="@+id/rqtimeslot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="For :- 1-2 PM"
+                    android:textSize="11sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/appviewpatienphone"
+                    app:layout_constraintStart_toEndOf="@+id/appviewpatienphone"
+                    app:layout_constraintTop_toTopOf="@+id/appviewpatienphone" />
+
+                <TextView
+                    android:id="@+id/reqstatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="5dp"
+                    android:text="requestStatus"
+                    android:textSize="11sp"
+                    app:layout_constraintStart_toEndOf="@+id/appointviewimg"
+                    app:layout_constraintTop_toBottomOf="@+id/appviewpatienphone" />
+
+                <TextView
+                    android:id="@+id/appointnumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textSize="11sp"
+                    android:text=""
+                    app:layout_constraintStart_toEndOf="@+id/reqstatus"
+                    app:layout_constraintTop_toTopOf="@+id/reqstatus" />
+
                 <LinearLayout
-                    android:padding="5dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/buttongrp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:padding="5dp"
                     android:weightSum="100"
-                    app:layout_constraintTop_toBottomOf="@+id/appointviewimg"
+                    app:layout_constraintTop_toBottomOf="@+id/reqstatus"
                     tools:layout_editor_absoluteX="15dp">
 
                     <Button
                         android:id="@+id/btnappointcancel"
-                        android:layout_margin="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
                         android:layout_weight="50"
                         android:text="Cancel" />
 
                     <Button
                         android:id="@+id/btnappointapprove"
-                        android:layout_margin="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
                         android:layout_weight="50"
                         android:text="Approve" />
 
                 </LinearLayout>
-
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

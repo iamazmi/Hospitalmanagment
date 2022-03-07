@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
 
 //                startActivity(new Intent(LoginActivity.this, UserHomeActivity.class));
                 if(isAllDataMeetRequirment()){
-                    progressDialog.setTitle("Login Account...");
+                    progressDialog.setMessage("Login Account...");
                     progressDialog.show();
                     firebaseAuth = FirebaseAuth.getInstance();
                     singInUserToAccount();
