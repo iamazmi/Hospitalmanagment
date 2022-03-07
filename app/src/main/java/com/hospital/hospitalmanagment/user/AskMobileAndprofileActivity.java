@@ -179,6 +179,8 @@ public class AskMobileAndprofileActivity extends AppCompatActivity {
                                             });
 
                                 } else {
+                                    startActivity(new Intent(AskMobileAndprofileActivity.this, UserHomeActivity.class));
+                                    finish();
                                     progressDialog.dismiss();
                                 }
                             } else {

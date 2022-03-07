@@ -50,6 +50,7 @@ public class DoctorHomeActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         initilizeDoctordata();
+        initilizeDoctorAppointment();
 
         docoutv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +76,11 @@ public class DoctorHomeActivity extends AppCompatActivity {
         });
 
     }//
+
+
+    private void initilizeDoctorAppointment() {
+
+    }
 
     private void initilizeDoctordata() {
 

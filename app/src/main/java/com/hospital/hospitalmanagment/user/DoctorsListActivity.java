@@ -231,12 +231,13 @@ public class DoctorsListActivity extends AppCompatActivity {
 
         Snackbar.make(coordinatorLayout,"outside request btn click "+"date"+timstamp+" time"+requestTime,Snackbar.LENGTH_SHORT).show();
         long timeOfBookingInTimestamp = Calendar.getInstance().getTimeInMillis();
-        DatabaseReference dbrefofAppointment = FirebaseDatabase.getInstance().getReference("Appointment")
-                .child(firebaseAuth.getCurrentUser().getUid()).child(uidofdoc).child(Long.toString(timeOfBookingInTimestamp));
+        DatabaseReference dbrefofAppointment = FirebaseDatabase.getInstance().getReference("Patiens")
+                .child(firebaseAuth.getCurrentUser().getUid()).child("Appointment").child(uidofdoc).child(Long.toString(timeOfBookingInTimestamp));;
+//                .child(uidofdoc).child(Long.toString(timeOfBookingInTimestamp));
         dbrefofAppointment.child("Status").setValue("pending");
         dbrefofAppointment.child("DateTimestamp").setValue(timstamp);
         dbrefofAppointment.child("timeSlot").setValue(requestTime);
-        dbrefofAppointment.child("Patienuid").setValue(firebaseAuth.getCurrentUser().getUid());
+//        dbrefofAppointment.child("Patienuid").setValue(firebaseAuth.getCurrentUser().getUid());
          new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
