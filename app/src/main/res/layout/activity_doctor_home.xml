@@ -210,7 +210,6 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:scaleType="center"
-
                 android:src="@drawable/ic_baseline_exit_to_app_24" />
 
         </androidx.cardview.widget.CardView>

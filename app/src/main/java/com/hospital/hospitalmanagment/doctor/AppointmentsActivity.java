@@ -2,17 +2,24 @@ package com.hospital.hospitalmanagment.doctor;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -23,8 +30,12 @@ import com.hospital.hospitalmanagment.Adapter.AppointmentAdapter;
 import com.hospital.hospitalmanagment.R;
 import com.hospital.hospitalmanagment.model.Appointmentviewmodel;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -40,34 +51,66 @@ public class AppointmentsActivity extends AppCompatActivity {
     private AppointmentAdapter appointmentAdapter;
     private List<Appointmentviewmodel> patientAppointmentmodel;
     private ProgressDialog progressDialog;
+    private LocalDate filterdate;
+    private CardView Datepickercv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointments);
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading....");
-        progressDialog.show();
         firebaseAuth = FirebaseAuth.getInstance();
         AppointmentsIsFrom = getIntent().getStringExtra("Appointmentfrom");
         coordinatorLayout = findViewById(R.id.appointmentlistcoordinate);
+        Datepickercv = findViewById(R.id.filterdatecd);
+
 
         Snackbar.make(coordinatorLayout,AppointmentsIsFrom+" Appointments",Snackbar.LENGTH_SHORT).show();
 
         testview  = findViewById(R.id.appointsfrom);
         testview.setText(AppointmentsIsFrom);
         recyclerViewAppointmentList = findViewById(R.id.appointmentactoinrecycleview);
+        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        final MaterialDatePicker materialDatePicker = materialDateBuilder.setTitleText("Select date").build();
+
+        Datepickercv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(coordinatorLayout,"Press 'Cancel' For reset Filter",Snackbar.LENGTH_SHORT).show();
+                materialDatePicker.show(getSupportFragmentManager(),"MATERIAL_DATE_PICKER");
+            }
+        });
 
 
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Object selection) {
+                filterdate = Instant.ofEpochMilli(Long.parseLong(selection.toString())).atZone(ZoneId.systemDefault()).toLocalDate();
+                loadAppointments();
+//                Snackbar.make(coordinatorLayout,""+Instant.ofEpochMilli(Long.parseLong(selection.toString()))
+//                        .atZone(ZoneId.systemDefault()).toLocalDate(),Snackbar.LENGTH_SHORT).show();
+            }
+        });
 
-    loadAppointments();
+
+        materialDatePicker.addOnNegativeButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                filterdate = null;
+                loadAppointments();
+                Snackbar.make(coordinatorLayout,"filter clear",Snackbar.LENGTH_SHORT).show();
+            }
+        });
+        loadAppointments();
 
     }//
 
     private void loadAppointments() {
+        progressDialog.setMessage("Loading....");
+        progressDialog.show();
 
         recyclerViewAppointmentList.setLayoutManager(new LinearLayoutManager(this));
-
         DatabaseReference dbreference = FirebaseDatabase.getInstance().getReference("Patiens");
         dbreference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -94,18 +137,50 @@ public class AppointmentsActivity extends AppCompatActivity {
 //                                Log.i("taskdata", "onLoopfilterdoctor: "+dataSnapshot1.getKey());
 
                                 //now get doctorAppointment
-                                doctorsappoint.getChildren().forEach(Appointment -> {
-                                    Appointmentviewmodel tempmodel = Appointment.getValue(Appointmentviewmodel.class);
-                                    if (!AppointmentsIsFrom.equals(tempmodel.getStatus())) {
+                                doctorsappoint.getChildren().forEach(Appointment ->
+                                {
+                                    String timestampOfAppointment = Appointment.getKey();
+                                    LocalDate localDateOfAppointment =  Instant.ofEpochMilli(Long.parseLong(timestampOfAppointment)).atZone(ZoneId.systemDefault()).toLocalDate();
+//                                    filterdate.isAfter(localDateOfAppointment)
+                                   if(filterdate != null){
+                                    Log.i("abba", "onComplete: " + "filter not null " + (filterdate != null)
+                                            + "date of both " + filterdate.getYear() + " : " + localDateOfAppointment.getYear() + " match " + (filterdate.getYear() == localDateOfAppointment.getYear())
+                                            + "month of both " + filterdate.getMonthValue() + " : " + localDateOfAppointment.getMonthValue() + " match " + (filterdate.getMonthValue() == localDateOfAppointment.getMonthValue())
+                                            + "day of both " + filterdate.getDayOfMonth() + " : " + localDateOfAppointment.getDayOfMonth()
+                                            + " match " + (filterdate.getDayOfMonth() == localDateOfAppointment.getDayOfMonth())+" key is "+Appointment.getKey());
+                                }
+                                    if(filterdate != null &&
+                                            (filterdate.getYear() == localDateOfAppointment.getYear()
+                                                    && filterdate.getMonthValue() == localDateOfAppointment.getMonthValue()
+                                                    && filterdate.getDayOfMonth() == localDateOfAppointment.getDayOfMonth()))
+                                    {
+                                        Appointmentviewmodel tempmodel = Appointment.getValue(Appointmentviewmodel.class);
+                                        if (!AppointmentsIsFrom.equals(tempmodel.getStatus())) {
+                                            return;
+                                        }
+                                        tempmodel.setPatienuid(userprofile.getKey());
+                                        tempmodel.setPatitentName(userprofile.child("PaitentName").getValue().toString());
+                                        if (userprofile.child("Profilepic").exists()) {
+                                            tempmodel.setProfilepic(userprofile.child("Profilepic").getValue().toString());
+                                        }
+                                        tempmodel.setPhone(userprofile.child("Phone").getValue().toString());
+                                        patientAppointmentmodel.add(tempmodel);
                                         return;
                                     }
-                                    tempmodel.setPatienuid(userprofile.getKey());
-                                    tempmodel.setPatitentName(userprofile.child("PaitentName").getValue().toString());
-                                    if (userprofile.child("Profilepic").exists()) {
-                                        tempmodel.setProfilepic(userprofile.child("Profilepic").getValue().toString());
+                                    if(filterdate == null){
+                                        Appointmentviewmodel tempmodel = Appointment.getValue(Appointmentviewmodel.class);
+                                        if (!AppointmentsIsFrom.equals(tempmodel.getStatus())) {
+                                            return;
+                                        }
+                                        tempmodel.setPatienuid(userprofile.getKey());
+                                        tempmodel.setPatitentName(userprofile.child("PaitentName").getValue().toString());
+                                        if (userprofile.child("Profilepic").exists()) {
+                                            tempmodel.setProfilepic(userprofile.child("Profilepic").getValue().toString());
+                                        }
+                                        tempmodel.setPhone(userprofile.child("Phone").getValue().toString());
+                                        patientAppointmentmodel.add(tempmodel);
                                     }
-                                    tempmodel.setPhone(userprofile.child("Phone").getValue().toString());
-                                    patientAppointmentmodel.add(tempmodel);
+
                                 });
                             }
                         });
