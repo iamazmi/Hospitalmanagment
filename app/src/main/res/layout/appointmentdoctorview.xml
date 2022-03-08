@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         app:cardCornerRadius="20dp"
+    android:elevation="60dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -94,6 +95,7 @@
                     app:layout_constraintTop_toTopOf="@+id/appviewpatienphone" />
 
                 <TextView
+
                     android:id="@+id/reqstatus"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -126,6 +128,7 @@
                     tools:layout_editor_absoluteX="15dp">
 
                     <Button
+                        android:background="@drawable/circlebtn"
                         android:id="@+id/btnappointcancel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -134,6 +137,7 @@
                         android:text="Cancel" />
 
                     <Button
+                        android:background="@drawable/circlebtn"
                         android:id="@+id/btnappointapprove"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

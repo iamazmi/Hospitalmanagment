@@ -15,12 +15,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -65,8 +68,6 @@ public class AppointmentsActivity extends AppCompatActivity {
         Datepickercv = findViewById(R.id.filterdatecd);
 
 
-        Snackbar.make(coordinatorLayout,AppointmentsIsFrom+" Appointments",Snackbar.LENGTH_SHORT).show();
-
         testview  = findViewById(R.id.appointsfrom);
         testview.setText(AppointmentsIsFrom);
         recyclerViewAppointmentList = findViewById(R.id.appointmentactoinrecycleview);
@@ -80,7 +81,6 @@ public class AppointmentsActivity extends AppCompatActivity {
                 materialDatePicker.show(getSupportFragmentManager(),"MATERIAL_DATE_PICKER");
             }
         });
-
 
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
             @Override
@@ -96,7 +96,6 @@ public class AppointmentsActivity extends AppCompatActivity {
         materialDatePicker.addOnNegativeButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 filterdate = null;
                 loadAppointments();
                 Snackbar.make(coordinatorLayout,"filter clear",Snackbar.LENGTH_SHORT).show();
@@ -154,6 +153,7 @@ public class AppointmentsActivity extends AppCompatActivity {
                                                     && filterdate.getMonthValue() == localDateOfAppointment.getMonthValue()
                                                     && filterdate.getDayOfMonth() == localDateOfAppointment.getDayOfMonth()))
                                     {
+
                                         Appointmentviewmodel tempmodel = Appointment.getValue(Appointmentviewmodel.class);
                                         if (!AppointmentsIsFrom.equals(tempmodel.getStatus())) {
                                             return;
@@ -167,7 +167,12 @@ public class AppointmentsActivity extends AppCompatActivity {
                                         patientAppointmentmodel.add(tempmodel);
                                         return;
                                     }
+
                                     if(filterdate == null){
+                                        if(localDateOfAppointment.isBefore(LocalDate.now())){
+                                            Log.i("insideoncompleteAppointmaker", "onComplete: in is before current date appointment date "+Appointment.getKey());
+                                            return;
+                                        }
                                         Appointmentviewmodel tempmodel = Appointment.getValue(Appointmentviewmodel.class);
                                         if (!AppointmentsIsFrom.equals(tempmodel.getStatus())) {
                                             return;
@@ -209,7 +214,54 @@ public class AppointmentsActivity extends AppCompatActivity {
 
         return (new AppointmentAdapter.HandleButtonofviewinterface() {
             @Override
-            public void onChangeAppointmentStatus(String useruid, String appointmentno,String newstatus) {
+            public void onChangeAppointmentStatus(String useruid, String appointmentno,String newstatus,String rqtime) {
+
+                if(newstatus.equals(getResources().getString(R.string.approved))){
+                    String[] timings = (rqtime.split(" ")[0].split("-"));
+//
+//                Snackbar.make(coordinatorLayout,"timings"+(rqtime.split(" ")[0].split("-")[0])+" and "+(rqtime.split(" ")[0].split("-")[1]),Snackbar.LENGTH_SHORT).show();
+                    MaterialTimePicker materialTimePicker = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H).setTitleText("Allocate time to Appointment").setHour(Integer.parseInt(timings[0])).build();
+                    materialTimePicker.show(getSupportFragmentManager(),"fragment_appointime");
+
+                    materialTimePicker.addOnPositiveButtonClickListener(dialog -> {
+
+                        DatabaseReference patiendbRef = FirebaseDatabase.getInstance().getReference("Patiens")
+                                .child(useruid)
+                                .child("Appointment")
+                                .child(firebaseAuth.getCurrentUser().getUid())
+                                .child(appointmentno);
+                        patiendbRef.child("Status").setValue(newstatus);
+
+                        int newHour;
+                        String AmorPm;
+                        if(materialTimePicker.getHour() > 12){
+                            newHour = (Math.abs(12-(materialTimePicker.getHour())));
+                            AmorPm = "PM";
+                        }else if(materialTimePicker.getHour() == 12){
+                            newHour = materialTimePicker.getHour();
+                            AmorPm = "PM";
+                        }
+                        else {
+                            newHour = materialTimePicker.getHour();
+                            AmorPm = "AM";
+                        }
+                        int newMinute = materialTimePicker.getMinute();
+                        LocalDate ld = Instant.ofEpochMilli(Long.parseLong(appointmentno)).atZone(ZoneId.systemDefault()).toLocalDate();
+                        Snackbar.make(coordinatorLayout,"Appointment Booked "+ld+" "+newHour+" : "+newMinute+" "+AmorPm,Snackbar.LENGTH_SHORT).show();
+                        patiendbRef.child("timeSlot").setValue(("Apt Date : "+ld.toString()+" "+newHour+":"+newMinute+" "+AmorPm));
+                        loadAppointments();
+                    });
+
+                }else {
+                    DatabaseReference patiendbRef = FirebaseDatabase.getInstance().getReference("Patiens")
+                            .child(useruid)
+                            .child("Appointment")
+                            .child(firebaseAuth.getCurrentUser().getUid())
+                            .child(appointmentno);
+                    patiendbRef.child("Status").setValue(newstatus);
+                    Snackbar.make(coordinatorLayout,"Appointment Canceled.",Snackbar.LENGTH_SHORT).show();
+                    loadAppointments();
+                }
 
             }
         });

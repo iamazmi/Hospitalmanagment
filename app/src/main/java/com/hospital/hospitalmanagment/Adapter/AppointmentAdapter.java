@@ -9,11 +9,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.snackbar.Snackbar;
 import com.hospital.hospitalmanagment.R;
 import com.hospital.hospitalmanagment.model.Appointmentviewmodel;
 
@@ -30,7 +32,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
     private HandleButtonofviewinterface handleButtonofviewinterface;
 
     public interface HandleButtonofviewinterface{
-        void onChangeAppointmentStatus(String useruid,String appointmentno,String newstatus);
+        void onChangeAppointmentStatus(String useruid,String appointmentno,String newstatus,String rqtime);
     }
 
     public void setInterfaceImplementions(HandleButtonofviewinterface forhandleclick){
@@ -38,6 +40,11 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
     }
 
     public AppointmentAdapter(List<Appointmentviewmodel> doctorAppointments, Context context, HandleButtonofviewinterface handleButtonofviewinterface) {
+        DoctorAppointments = doctorAppointments;
+        this.context = context;
+        this.handleButtonofviewinterface = handleButtonofviewinterface;
+    }
+    public AppointmentAdapter(List<Appointmentviewmodel> doctorAppointments, Context context) {
         DoctorAppointments = doctorAppointments;
         this.context = context;
         this.handleButtonofviewinterface = handleButtonofviewinterface;
@@ -60,8 +67,15 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
         holder.pAppointstatus.setText(appointmentm.getStatus());
         holder.pAppointstatus.setTextColor(Color.YELLOW);
         LocalDate localDate = Instant.ofEpochMilli(Long.parseLong(appointmentm.getDateTimestamp())).atZone(ZoneId.systemDefault()).toLocalDate();
-        holder.timeslot.setText("For : "+localDate.toString()+" : "+appointmentm.getTimeSlot());
-
+        if(appointmentm.getStatus().equals("Approved")){
+            holder.timeslot.setText(appointmentm.getTimeSlot());
+        }else {
+            holder.timeslot.setText(("For : "+localDate.toString()+" : "+appointmentm.getTimeSlot()));
+        }
+        if(localDate.isBefore(LocalDate.now())){
+            holder.approveapt.setEnabled(false);
+        }
+        holder.uuid = appointmentm.getPatienuid();
         if(appointmentm.getStatus().equals("Approved")){
             holder.btngrp.setVisibility(View.GONE);
             holder.pAppointNo.setText("Apt No : "+appointmentm.getDateTimestamp());
@@ -81,6 +95,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
         private TextView pname,Pphone,pAppointstatus,pAppointNo,timeslot;
         private LinearLayout btngrp;
         private Button cancelapt,approveapt;
+        private String uuid;
         public itemViewHolderclass(@NonNull View itemView) {
             super(itemView);
             appointPaitenPic = itemView.findViewById(R.id.patienviewimg);
@@ -96,14 +111,22 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
             cancelapt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    int positon = getAbsoluteAdapterPosition();
+                    if(positon != RecyclerView.NO_POSITION && handleButtonofviewinterface != null){
+                     handleButtonofviewinterface.onChangeAppointmentStatus(uuid,(DoctorAppointments.get(positon).getDateTimestamp()),"Canceled",(DoctorAppointments.get(positon).getTimeSlot()));
+//                        Toast.makeText(context,uuid,Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
             approveapt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    int positon = getAbsoluteAdapterPosition();
+                    if(positon != RecyclerView.NO_POSITION && handleButtonofviewinterface != null){
+                        handleButtonofviewinterface.onChangeAppointmentStatus(uuid,(DoctorAppointments.get(positon).getDateTimestamp()),"Approved",(DoctorAppointments.get(positon).getTimeSlot()));
+//                        Toast.makeText(context,uuid,Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
