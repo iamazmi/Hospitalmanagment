@@ -92,9 +92,7 @@ public class DoctorsListActivity extends AppCompatActivity {
         doctorsdbReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
                     progd.dismiss();
-                }
             }
         });
 
@@ -218,10 +216,7 @@ public class DoctorsListActivity extends AppCompatActivity {
 
                     }
                 });
-
                 alertDialog.show();
-
-
             }
         });
 

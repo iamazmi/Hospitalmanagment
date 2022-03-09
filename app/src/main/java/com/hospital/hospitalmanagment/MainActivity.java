@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
         if(firebaseUser != null){
-            Snackbar.make(coordinatorLayout, "userlogin "+firebaseUser.getUid(), Snackbar.LENGTH_SHORT).show();
+//            Snackbar.make(coordinatorLayout, "userlogin "+firebaseUser.getUid(), Snackbar.LENGTH_SHORT).show();
 
             FirebaseDatabase.getInstance().getReference("Doctors").child(firebaseUser.getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -48,46 +48,46 @@ public class MainActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     if (task.isSuccessful()){
                         if(task.getResult().child("Admin").exists()){
-                            Snackbar.make(coordinatorLayout, "user found in doctor login and admin ", Snackbar.LENGTH_SHORT).show();
+//                            Snackbar.make(coordinatorLayout, "user found in doctor login and admin ", Snackbar.LENGTH_SHORT).show();
                             startActivity(new Intent(MainActivity.this, AdminActivity.class));
                             finish();
                         }else if(task.getResult().child("Special").exists()){
-                            Snackbar.make(coordinatorLayout, "user  found in doctor login and doctor ", Snackbar.LENGTH_SHORT).show();
+//                            Snackbar.make(coordinatorLayout, "user  found in doctor login and doctor ", Snackbar.LENGTH_SHORT).show();
                             startActivity(new Intent(MainActivity.this, DoctorHomeActivity.class));
                             finish();
                         }else{
-                            Snackbar.make(coordinatorLayout, "user not found in doctor login", Snackbar.LENGTH_SHORT).show();
+//                            Snackbar.make(coordinatorLayout, "user not found in doctor login", Snackbar.LENGTH_SHORT).show();
                             FirebaseDatabase.getInstance().getReference("Patiens").child(firebaseUser.getUid())
                                     .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                                     if(task.isSuccessful()){
                                         if(task.getResult().child("Admin").exists()){
-                                            Snackbar.make(coordinatorLayout, "user found in Patiens login and admin ", Snackbar.LENGTH_SHORT).show();
+//                                            Snackbar.make(coordinatorLayout, "user found in Patiens login and admin ", Snackbar.LENGTH_SHORT).show();
                                             startActivity(new Intent(MainActivity.this, AdminActivity.class));
                                             finish();
                                         }else if(!(task.getResult().child("Phone").exists())){
-                                            Snackbar.make(coordinatorLayout, "user  found in Patiens login and patien not phone ", Snackbar.LENGTH_SHORT).show();
+//                                            Snackbar.make(coordinatorLayout, "user  found in Patiens login and patien not phone ", Snackbar.LENGTH_SHORT).show();
                                             startActivity(new Intent(MainActivity.this, AskMobileAndprofileActivity.class));
                                             finish();
                                         }else{
-                                            Snackbar.make(coordinatorLayout, "user  found in Patiens login and patien ", Snackbar.LENGTH_SHORT).show();
+//                                            Snackbar.make(coordinatorLayout, "user  found in Patiens login and patien ", Snackbar.LENGTH_SHORT).show();
                                             startActivity(new Intent(MainActivity.this, UserHomeActivity.class));
                                             finish();
                                         }
                                     }else{
-                                        Snackbar.make(coordinatorLayout, "p: task not success", Snackbar.LENGTH_SHORT).show();
+                                        Snackbar.make(coordinatorLayout, "inner Getting Error please contact admin!", Snackbar.LENGTH_SHORT).show();
                                     }
                                 }
                             });
                         }
                     }else {
-                        Snackbar.make(coordinatorLayout, "D:task nor success", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(coordinatorLayout, "outer Getting Error please contact admin!", Snackbar.LENGTH_SHORT).show();
                     }
                 }
             });
         }else {
-            Snackbar.make(coordinatorLayout, "user not login", Snackbar.LENGTH_SHORT).show();
+//            Snackbar.make(coordinatorLayout, "user not login", Snackbar.LENGTH_SHORT).show();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {

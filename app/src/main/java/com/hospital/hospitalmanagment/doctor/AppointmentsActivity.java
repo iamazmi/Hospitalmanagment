@@ -168,7 +168,8 @@ public class AppointmentsActivity extends AppCompatActivity {
                                         return;
                                     }
 
-                                    if(filterdate == null){
+                                    if(filterdate == null)
+                                    {
                                         if(localDateOfAppointment.isBefore(LocalDate.now())){
                                             Log.i("insideoncompleteAppointmaker", "onComplete: in is before current date appointment date "+Appointment.getKey());
                                             return;
@@ -185,7 +186,6 @@ public class AppointmentsActivity extends AppCompatActivity {
                                         tempmodel.setPhone(userprofile.child("Phone").getValue().toString());
                                         patientAppointmentmodel.add(tempmodel);
                                     }
-
                                 });
                             }
                         });

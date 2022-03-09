@@ -78,7 +78,7 @@ public class UserHomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 historyappointmentv.startAnimation(AnimationUtils.loadAnimation(UserHomeActivity.this,R.anim.clickeffect));
-
+                startActivity(new Intent(UserHomeActivity.this,HistoryActivity.class));
             }
         });
         Hospitalistv.setOnClickListener(new View.OnClickListener() {

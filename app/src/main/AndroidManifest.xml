@@ -10,7 +10,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/Theme.HospitalManagment">
+        <activity
+            android:name=".user.HistoryActivity"
+            android:exported="false" />
         <activity
             android:name=".doctor.AppointmentsActivity"
             android:exported="false" />
