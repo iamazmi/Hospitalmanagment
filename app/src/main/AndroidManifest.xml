@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HospitalManagment">
         <activity
+            android:name=".AddHospitalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddFaqActivity"
+            android:exported="false" />
+        <activity
             android:name=".user.HistoryActivity"
             android:exported="false" />
         <activity

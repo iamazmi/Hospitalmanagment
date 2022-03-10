@@ -16,13 +16,10 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -41,11 +38,11 @@ import com.hospital.hospitalmanagment.model.DoctorModel;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DoctorsListActivity extends AppCompatActivity {
 
@@ -182,8 +179,7 @@ public class DoctorsListActivity extends AppCompatActivity {
 
                 formalert.setView(formalertview);
 
-                formalert
-                        .setCancelable(false)
+                formalert.setCancelable(false)
                         .setPositiveButton("Request Appointment", null)
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
@@ -207,7 +203,7 @@ public class DoctorsListActivity extends AppCompatActivity {
                               {
                                   progd.setMessage("Booking Appointment...");
                                   progd.show();
-                                  sayhi(dateTimestamp.toString(),requestedTime.toString(),uidofdoctor,alertDialog);
+                                  bookAppointment(dateTimestamp.toString(),requestedTime.toString(),uidofdoctor,alertDialog);
                               }else{
                                   Snackbar.make(coordinatorLayout,"Please Select Date And Time of Appointment",Snackbar.LENGTH_SHORT).show();
                               }
@@ -222,25 +218,59 @@ public class DoctorsListActivity extends AppCompatActivity {
 
     }//
 
-    private void sayhi(String timstamp,String requestTime,String uidofdoc,AlertDialog alertDialog) {
 
-        Snackbar.make(coordinatorLayout,"outside request btn click "+"date"+timstamp+" time"+requestTime,Snackbar.LENGTH_SHORT).show();
-        long timeOfBookingInTimestamp = Calendar.getInstance().getTimeInMillis();
-        DatabaseReference dbrefofAppointment = FirebaseDatabase.getInstance().getReference("Patiens")
-                .child(firebaseAuth.getCurrentUser().getUid()).child("Appointment").child(uidofdoc).child(timstamp);
 
-        dbrefofAppointment.child("Status").setValue((getResources().getString(R.string.pending)));
-        dbrefofAppointment.child("DateTimestamp").setValue(timstamp);
-        dbrefofAppointment.child("timeSlot").setValue(requestTime);
-//        dbrefofAppointment.child("Patienuid").setValue(firebaseAuth.getCurrentUser().getUid());
-         new Handler().postDelayed(new Runnable() {
+    private void bookAppointment(String timstamp,String requestTime,String uidofdoc,AlertDialog alertDialog) {
+
+        FirebaseDatabase.getInstance().getReference("Patiens").child(firebaseAuth.getCurrentUser().getUid())
+                .child("Appointment").child(uidofdoc).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void run() {
-                progd.dismiss();
-                alertDialog.dismiss();
-                Snackbar.make(coordinatorLayout,"Your Appointment Request booked.",Snackbar.LENGTH_SHORT).show();
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+//                    AtomicBoolean canTakeAppoint = new AtomicBoolean(true);
+                    boolean canTakeAppoint = true;
+                    String reason = "";
+                    for(DataSnapshot Appointment:task.getResult().getChildren()){
+                        LocalDate appointdate = Instant.ofEpochMilli(Long.parseLong(Appointment.getKey())).atZone(ZoneId.systemDefault()).toLocalDate();
+                        if(!appointdate.isBefore(LocalDate.now())){
+                            if((Appointment.child("Status").getValue().toString().equals("Pending"))){
+                                canTakeAppoint = false;
+                                reason = "You Already Made Request For Appointment Please Wait Approval.";
+                                break;
+                            }
+                        }
+                    }
+                    if(canTakeAppoint){
+                        DatabaseReference dbrefofAppointment = FirebaseDatabase.getInstance().getReference("Patiens")
+                                .child(firebaseAuth.getCurrentUser().getUid()).child("Appointment").child(uidofdoc).child(timstamp);
+                        dbrefofAppointment.child("Status").setValue((getResources().getString(R.string.pending)));
+                        dbrefofAppointment.child("DateTimestamp").setValue(timstamp);
+                        dbrefofAppointment.child("timeSlot").setValue(requestTime);
+//                          dbrefofAppointment.child("Patienuid").setValue(firebaseAuth.getCurrentUser().getUid());
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                progd.dismiss();
+                                alertDialog.dismiss();
+                                Snackbar.make(coordinatorLayout,"Your Appointment Request booked.",Snackbar.LENGTH_SHORT).show();
+                            }
+                        },1500);
+                    }else{
+                        progd.dismiss();
+                        Snackbar.make(coordinatorLayout,""+reason,Snackbar.LENGTH_SHORT).show();
+                    }
+
+                }else{
+                    progd.dismiss();
+                    Snackbar.make(coordinatorLayout,"task fail on Book Appointment "+task.getException().getMessage(),Snackbar.LENGTH_LONG).show();
+                }
+
             }
-        },2000);
+        });
+
+//        Snackbar.make(coordinatorLayout,"outside request btn click "+"date"+timstamp+" time"+requestTime,Snackbar.LENGTH_SHORT).show();
+//        long timeOfBookingInTimestamp = Calendar.getInstance().getTimeInMillis();
+
 
     }
 

@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -111,19 +112,17 @@ public class AdminActivity extends AppCompatActivity {
         ChangeDoctorProfilePicbtn = findViewById(R.id.addprofile);
 
         sharedPreferences = getSharedPreferences("adminSharedPref",MODE_PRIVATE);
-
+        editor = sharedPreferences.edit();
         if((getIntent().getStringExtra("adminEmail") != null) && (getIntent().getStringExtra("adminPass") != null)){
            this.adminEmail = getIntent().getStringExtra("adminEmail");
             this.adminPassword = getIntent().getStringExtra("adminPass");
-            editor = sharedPreferences.edit();
             editor.putString("adminEmail",getIntent().getStringExtra("adminEmail"));
             editor.putString("adlock",getIntent().getStringExtra("adminPass"));
-
             editor.commit();
         }else {
                 this.adminEmail = sharedPreferences.getString("adminEmail","");
                this.adminPassword = sharedPreferences.getString("adlock","");
-        }
+             }
 
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -165,11 +164,23 @@ public class AdminActivity extends AppCompatActivity {
                             editor.remove("adlock");
                             editor.commit();
 //                            Log.i("uid", "inside logout button: current user uid "+firebaseAuth.getCurrentUser().getUid());
-                            startActivity(new Intent(AdminActivity.this, UserOptionActivity.class));
-                            finish();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startActivity(new Intent(AdminActivity.this, UserOptionActivity.class));
+                                    finish();
+                                }
+                            },4000);
+
                         }
 //                        startActivity(new Intent(AdminActivity.this, UserOptionActivity.class));
 //                        finish();
+                        break;
+                    case R.id.adminFAQ:
+                        startActivity(new Intent(AdminActivity.this, AddFaqActivity.class));
+                        break;
+                    case R.id.adminaddhospital:
+                        startActivity(new Intent(AdminActivity.this, AddHospitalActivity.class));
                         break;
                     default:
                         return false;

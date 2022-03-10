@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/signupcoordinatelayout"
-    android:background="@drawable/sign"
+    android:background="@drawable/newdark"
     tools:context=".loginsignup.SignupActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -108,14 +108,14 @@
 
         <Button
             android:id="@+id/signupbtn"
-            style="?attr/materialButtonOutlinedStyle"
+            style="?attr/materialButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="120dp"
+            android:layout_marginBottom="124dp"
             android:text="signup"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/signupassword"
-            app:layout_constraintHorizontal_bias="0.574"
+            app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="@+id/signupassword" />
 
 

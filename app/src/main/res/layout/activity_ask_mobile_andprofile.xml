@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/picandnocoordinate"
+    android:background="@drawable/newdark"
     tools:context=".user.AskMobileAndprofileActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,8 +15,8 @@
         <androidx.cardview.widget.CardView
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="@color/white"
+            android:layout_marginBottom="46dp"
+            app:cardBackgroundColor="#CFD8DC"
             app:cardCornerRadius="250dp"
             app:layout_constraintBottom_toTopOf="@+id/selectnewpic"
             app:layout_constraintEnd_toEndOf="@+id/selectnewpic"
@@ -107,15 +108,15 @@
 
         <Button
             android:id="@+id/updatepicno"
+            style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="144dp"
+            android:layout_marginBottom="188dp"
             android:text="Update"
             app:icon="@drawable/ic_baseline_check_24"
-            style="@style/Widget.MaterialComponents.Button.Icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/phonelayout"
-            app:layout_constraintHorizontal_bias="0.507"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="@+id/phonelayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
